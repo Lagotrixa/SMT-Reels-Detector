@@ -91,8 +91,9 @@ def crop_rect(rect, box, img):
     return cropped
 
 
-if __name__ == "__main__":    
-    image = cv2.imread("4.jpg", cv2.IMREAD_GRAYSCALE)
+if __name__ == "__main__":
+    #PUT IMG NAME HERE
+    image = cv2.imread("IMAGE.jpg", cv2.IMREAD_GRAYSCALE)
     candidates = detect(image)
     out = []
     for i in range(len(candidates)):
