@@ -99,9 +99,9 @@ if __name__ == "__main__":
         decodedObjects = pyzbar.decode(thresh2)
         for obj in decodedObjects:
             out.append(obj.data.decode("utf-8"))
-        cv2.imshow(str(i), candidate["cropped"]) 
+        #cv2.imshow(str(i), candidate["cropped"]) 
     print(out)
     with open('out.csv', 'w') as f:
         writer = csv.writer(f)
         writer.writerows([out])
-    cv2.waitKey(0)
+    #cv2.waitKey(0)
