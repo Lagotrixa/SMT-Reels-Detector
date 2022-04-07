@@ -15,15 +15,12 @@ def detect(img):
     # closed = cv2.morphologyEx(resized, cv2.MORPH_CLOSE, cv2.getStructuringElement(cv2.MORPH_RECT, (1, 21)))
 
     ret, thresh =cv2.threshold(resized, 128, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
-    #ret, thresh =cv2.threshold(gray, 127, 255, cv2.THRESH_BINARY)
     thresh = cv2.bitwise_not(thresh)
     kernel = np.ones((3, 20), np.uint8)
     thresh = cv2.dilate(thresh, kernel)
     #thresh = cv2.erode(thresh, kernel)
-    #thresh = cv2.erode(thresh, kernel)
-
+  
     original_sized = cv2.resize(thresh, (img.shape[1],img.shape[0]), interpolation = cv2.INTER_AREA)
-    #cv2.imwrite("dilated.jpg",original_sized)
     contours, hierarchy = cv2.findContours(original_sized,cv2.RETR_TREE,cv2.CHAIN_APPROX_SIMPLE)    
     
     candidates = []
@@ -93,20 +90,18 @@ def crop_rect(rect, box, img):
 
 if __name__ == "__main__":
     #PUT IMG NAME HERE
-    image = cv2.imread("IMAGE.jpg", cv2.IMREAD_GRAYSCALE)
+    image = cv2.imread("IMG.jpeg", cv2.IMREAD_GRAYSCALE)
     candidates = detect(image)
     out = []
     for i in range(len(candidates)):
         candidate = candidates[i]
-        (_, thresh2) = cv2.threshold(candidate["cropped"], 128, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
+        (_, thresh2) = cv2.threshold(candidate["cropped"], 150, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
         decodedObjects = pyzbar.decode(thresh2)
-        # Print results
         for obj in decodedObjects:
-            temp = obj.data.decode("utf-8")
-            print('Type : ', obj.type)
-            print('Data : ', temp ,'\n')
-            out.append(temp)
-        # cv2.imshow(str(i), thresh2)
+            out.append(obj.data.decode("utf-8"))
+        cv2.imshow(str(i), candidate["cropped"]) 
+    print(out)
     with open('out.csv', 'w') as f:
         writer = csv.writer(f)
         writer.writerows([out])
+    cv2.waitKey(0)
